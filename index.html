@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PixPoster</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        dark: {
+                            bg: '#0a0a0a',
+                            card: '#1a1a1a',
+                            border: '#2a2a2a',
+                            text: '#e5e5e5',
+                            muted: '#a3a3a3'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="dark bg-dark-bg text-dark-text flex flex-col items-center justify-center p-4 sm:p-6 min-h-screen">
+
+    <div
+        class="flex flex-col items-center gap-6 p-6 sm:p-8 max-w-7xl w-full bg-dark-card rounded-2xl shadow-2xl border border-dark-border">
+        <div class="text-center">
+            <h1
+                class="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 bg-clip-text text-transparent mb-2">
+                PixPoster</h1>
+            <p class="text-dark-muted text-sm sm:text-base">Editor de imágenes moderno y potente</p>
+        </div>
+
+        <div class="w-full space-y-6">
+
+            <div class="bg-dark-bg/50 rounded-xl p-4 sm:p-6 border border-dark-border">
+                <h3 class="text-lg font-semibold mb-4 text-dark-text">Cargar Imagen</h3>
+                <input type="file" id="file-upload"
+                    class="w-full file:mr-4 file:py-3 file:px-6 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-gradient-to-r file:from-blue-500 file:to-purple-600 file:text-white hover:file:from-blue-600 hover:file:to-purple-700 file:transition-all file:duration-200 file:cursor-pointer" />
+            </div>
+
+            <div class="bg-dark-bg/50 rounded-xl p-4 sm:p-6 border border-dark-border">
+                <h3 class="text-lg font-semibold mb-4 text-dark-text">Texto</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <input type="text" id="text-input" placeholder="Escribe tu texto aquí..."
+                        class="bg-dark-bg border border-dark-border p-3 rounded-lg text-dark-text placeholder-dark-muted focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all" />
+                    <div class="flex items-center gap-2">
+                        <label class="text-sm text-dark-muted">Color:</label>
+                        <input type="color" id="font-color-input" value="#ffffff"
+                            class="w-12 h-12 border-2 border-dark-border rounded-lg cursor-pointer bg-dark-bg" />
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <label class="text-sm text-dark-muted">Tamaño:</label>
+                        <input type="number" id="font-size-input" value="24" min="10" max="80"
+                            class="bg-dark-bg border border-dark-border p-3 rounded-lg w-20 text-center text-dark-text focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+                    </div>
+                    <button id="add-text-btn"
+                        class="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 transform hover:scale-105">Agregar</button>
+                </div>
+            </div>
+
+            <div class="bg-dark-bg/50 rounded-xl p-4 sm:p-6 border border-dark-border">
+                <h3 class="text-lg font-semibold mb-4 text-dark-text">Filtros</h3>
+
+                <div class="flex flex-wrap gap-3 mb-6">
+                    <button id="grayscale-btn"
+                        class="px-4 py-2 rounded-full font-medium transition-all duration-200 bg-gray-600 text-white hover:bg-gray-500 hover:scale-105">Escala
+                        de Grises</button>
+                    <button id="sepia-btn"
+                        class="px-4 py-2 rounded-full font-medium transition-all duration-200 bg-amber-600 text-white hover:bg-amber-500 hover:scale-105">Sepia</button>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div class="space-y-2">
+                        <div class="flex justify-between items-center">
+                            <label for="brightness-input" class="text-dark-text font-medium">Brillo</label>
+                            <span id="brightness-value" class="text-blue-400 font-semibold">0%</span>
+                        </div>
+                        <input id="brightness-input" type="range" min="-100" max="100" value="0"
+                            class="w-full h-2 bg-dark-border rounded-lg appearance-none cursor-pointer slider" />
+                    </div>
+
+                    <div class="space-y-2">
+                        <div class="flex justify-between items-center">
+                            <label for="saturation-input" class="text-dark-text font-medium">Saturación</label>
+                            <span id="saturation-value" class="text-purple-400 font-semibold">0%</span>
+                        </div>
+                        <input id="saturation-input" type="range" min="-100" max="100" value="0"
+                            class="w-full h-2 bg-dark-border rounded-lg appearance-none cursor-pointer slider" />
+                    </div>
+
+                    <div class="space-y-2">
+                        <div class="flex justify-between items-center">
+                            <label for="contrast-input" class="text-dark-text font-medium">Contraste</label>
+                            <span id="contrast-value" class="text-pink-400 font-semibold">0%</span>
+                        </div>
+                        <input id="contrast-input" type="range" min="-100" max="100" value="0"
+                            class="w-full h-2 bg-dark-border rounded-lg appearance-none cursor-pointer slider" />
+                    </div>
+
+                    <div class="space-y-2">
+                        <div class="flex justify-between items-center">
+                            <label for="hue-input" class="text-dark-text font-medium">Matiz</label>
+                            <span id="hue-value" class="text-green-400 font-semibold">0%</span>
+                        </div>
+                        <input id="hue-input" type="range" min="0" max="100" value="0"
+                            class="w-full h-2 bg-dark-border rounded-lg appearance-none cursor-pointer slider" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-dark-bg/50 rounded-xl p-4 sm:p-6 border border-dark-border">
+                <h3 class="text-lg font-semibold mb-4 text-dark-text">Stickers</h3>
+                <div class="flex flex-wrap gap-3">
+                    <button
+                        class="sticker-btn bg-dark-bg border-2 border-dark-border hover:border-blue-500 px-4 py-3 rounded-xl text-3xl hover:bg-dark-border transition-all duration-200 transform hover:scale-110"
+                        data-url="https://em-content.zobj.net/thumbs/160/apple/354/sparkles_2728.png">✨</button>
+                    <button
+                        class="sticker-btn bg-dark-bg border-2 border-dark-border hover:border-orange-500 px-4 py-3 rounded-xl text-3xl hover:bg-dark-border transition-all duration-200 transform hover:scale-110"
+                        data-url="https://em-content.zobj.net/thumbs/160/apple/354/cat-face_1f431.png">🐱</button>
+                    <button
+                        class="sticker-btn bg-dark-bg border-2 border-dark-border hover:border-yellow-500 px-4 py-3 rounded-xl text-3xl hover:bg-dark-border transition-all duration-200 transform hover:scale-110"
+                        data-url="https://em-content.zobj.net/thumbs/160/apple/354/paint-palette_1f3a8.png">🎨</button>
+
+                        <button class="sticker-btn bg-dark-bg border-2 border-dark-border hover:border-pink-500 px-4 py-3 rounded-xl text-3xl hover:bg-dark-border transition-all duration-200 transform hover:scale-110">🌸</button>
+    <button class="sticker-btn bg-dark-bg border-2 border-dark-border hover:border-purple-500 px-4 py-3 rounded-xl text-3xl hover:bg-dark-border transition-all duration-200 transform hover:scale-110">🦄</button>
+    <button class="sticker-btn bg-dark-bg border-2 border-dark-border hover:border-green-500 px-4 py-3 rounded-xl text-3xl hover:bg-dark-border transition-all duration-200 transform hover:scale-110">🦋</button>
+    <button class="sticker-btn bg-dark-bg border-2 border-dark-border hover:border-indigo-500 px-4 py-3 rounded-xl text-3xl hover:bg-dark-border transition-all duration-200 transform hover:scale-110">🌈</button>
+    <button class="sticker-btn bg-dark-bg border-2 border-dark-border hover:border-red-500 px-4 py-3 rounded-xl text-3xl hover:bg-dark-border transition-all duration-200 transform hover:scale-110">🍓</button>
+        <button class="sticker-btn bg-dark-bg border-2 border-dark-border hover:border-blue-400 px-4 py-3 rounded-xl text-3xl hover:bg-dark-border transition-all duration-200 transform hover:scale-110">💎</button>
+    <button class="sticker-btn bg-dark-bg border-2 border-dark-border hover:border-orange-400 px-4 py-3 rounded-xl text-3xl hover:bg-dark-border transition-all duration-200 transform hover:scale-110">🔥</button>
+    <button class="sticker-btn bg-dark-bg border-2 border-dark-border hover:border-yellow-400 px-4 py-3 rounded-xl text-3xl hover:bg-dark-border transition-all duration-200 transform hover:scale-110">👑</button>
+    <button class="sticker-btn bg-dark-bg border-2 border-dark-border hover:border-purple-400 px-4 py-3 rounded-xl text-3xl hover:bg-dark-border transition-all duration-200 transform hover:scale-110">🎵</button>
+                </div>
+            </div>
+
+            <div class="flex flex-wrap gap-4 justify-center">
+                <button id="delete-btn"
+                    class="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-semibold py-3 px-8 rounded-lg transition-all duration-200 transform hover:scale-105 shadow-lg">🗑️
+                    Eliminar</button>
+                <button id="download-btn"
+                    class="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-semibold py-3 px-8 rounded-lg transition-all duration-200 transform hover:scale-105 shadow-lg">📥
+                    Descargar PNG</button>
+            </div>
+        </div>
+
+        <div class="w-full flex justify-center">
+            <canvas id="canvas" class="border-2 border-dark-border rounded-xl shadow-2xl max-w-full h-auto"></canvas>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
